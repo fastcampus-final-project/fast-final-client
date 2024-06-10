@@ -1,8 +1,10 @@
-import { usePathname, useSearchParams } from 'next/navigation';
+'use client';
+
 import FlexBox from './FlexBox';
 import Text from './Text';
 import Link from 'next/link';
 import { useCallback } from 'react';
+import { useQueryString } from '@/shared/hooks/useQueryString';
 
 type TabProps = {
   array: string[];
@@ -12,9 +14,9 @@ type TabProps = {
 };
 
 const Tab = ({ array, type, tabKey, onTabChange }: TabProps) => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const selectedTab = searchParams.get(tabKey);
+  const { searchParams, pathname, queryValue } = useQueryString();
+
+  const selectedTab = queryValue(tabKey);
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -28,7 +30,7 @@ const Tab = ({ array, type, tabKey, onTabChange }: TabProps) => {
 
   return (
     <FlexBox
-      className={`${type === 'box' ? 'gap-[0.8rem]' : 'w-full border-b border-gray-200 px-[2rem]'}`}
+      className={`${type === 'box' ? 'gap-[0.8rem]' : 'w-full border-b border-gray-200 px-20'}`}
     >
       {array.map((label) => {
         return (

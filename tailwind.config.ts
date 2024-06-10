@@ -8,6 +8,27 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          'apple color emoji',
+          'segoe ui emoji',
+          'noto color emoji',
+          'android emoji',
+          'emojisymbols',
+          'emojione mozilla',
+          'twemoji mozilla'
+        ]
+      },
+      backgroundSize: {
+        auto: 'auto',
+        cover: 'cover',
+        contain: 'contain',
+        '53': '53rem'
+      },
+      backgroundImage: {
+        'create-bucket': "url('/images/create-bucket/bg.webp')",
+        'bucket-bubble': "url('/images/create-bucket/bubble.webp')"
+      },
       boxShadow: {
         sm: '0px 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 3px 8px 0px rgba(0, 0, 0, 0.15), 0px 3px 1px 0px rgba(0, 0, 0, 0.06)',
         '3xl': '0px 4px 10px 0px rgba(0, 0, 0, 0.06)',
@@ -45,6 +66,7 @@ const config: Config = {
         '48': ['4.8rem', { lineHeight: '7.2rem' }]
       },
       padding: {
+        '2': '0.2rem',
         '4': '0.4rem',
         '6': '0.6rem',
         '8': '0.8rem',
@@ -56,9 +78,11 @@ const config: Config = {
         '28': '2.8rem',
         '32': '3.2rem',
         '36': '3.6rem',
-        '40': '4rem'
+        '40': '4rem',
+        '48': '4.8rem'
       },
       margin: {
+        '2': '0.2rem',
         '4': '0.4rem',
         '6': '0.6rem',
         '8': '0.8rem',
@@ -70,13 +94,16 @@ const config: Config = {
         '28': '2.8rem',
         '32': '3.2rem',
         '36': '3.6rem',
-        '40': '4rem'
+        '40': '4rem',
+        '48': '4.8rem'
       },
       borderRadius: {
+        xxs: '0.4rem',
         xs: '0.8rem',
         sm: '1.2rem',
         md: '1.6rem',
-        lg: '2.4rem'
+        lg: '2.4rem',
+        consumption: '16rem 16rem 1.6rem 1.6rem'
       },
       colors: {
         bucket: '#53B7FF',
@@ -86,6 +113,7 @@ const config: Config = {
         active: '#5A7EFF',
         warning: '#FF5C46',
         red_500: '#F5553F',
+        select: '#FFEDE1',
         'gray-10': '#F7F9FA',
         'gray-50': '#F2F4F6',
         'gray-100': '#EDF0F3',
@@ -99,13 +127,11 @@ const config: Config = {
         banner: '#FFEDE1'
       },
       fontWeight: {
-        '300': '300',
         '400': '400',
         '500': '500',
         '600': '600',
         '700': '700',
-        '800': '800',
-        '900': '900'
+        '800': '800'
       },
       animation: {
         pop: 'pop 200ms cubic-bezier(0.18, 0.67, 0.6, 1.22) 0s 1 normal forwards'
@@ -118,6 +144,12 @@ const config: Config = {
           '100%': {
             scale: '105%',
             'box-shadow': '0px 0px 16px 9px rgba(0, 0, 0, 0.06)'
+          }
+        },
+        ping: {
+          '75%, 100%': {
+            transform: 'scale(1.1)',
+            opacity: '0.5'
           }
         }
       }

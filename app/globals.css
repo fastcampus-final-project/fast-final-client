@@ -24,6 +24,18 @@ input {
   border-radius: 0;
   -webkit-border-radius: 0;
 }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox  */
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
 .hide-scrollbar {
   scrollbar-width: none;
 }
@@ -35,4 +47,79 @@ input {
   -webkit-user-select: none; /* Chrome, Safari, Opera */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
+}
+.swiper {
+  position: relative;
+}
+.swiper-pagination {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+}
+.swiper-pagination.swiper-pagination-fraction {
+  border-radius: 10rem;
+  width: max-content;
+  font-size: 1rem;
+  line-height: 1.6rem;
+  padding: 0.2rem 0.6rem;
+  position: absolute;
+  background-color: #23282e;
+  color: white;
+  opacity: 0.6;
+  bottom: 1.2rem;
+  right: 1.6rem;
+  z-index: 1;
+}
+.swiper-pagination-bullet {
+  margin-top: 2.4rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  background-color: #ccd1d6;
+  border-radius: 0.5rem;
+  transition: all 0.1s ease-in;
+  cursor: pointer;
+}
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  width: 1.8rem;
+  background-color: #23282e;
+}
+.swiper-button-prev {
+  background-color: red;
+  width: 10px;
+}
+
+.jumping-dots-loader span:nth-child(1) {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.jumping-dots-loader span:nth-child(2) {
+  animation: bounce 1s ease-in-out 0.33s infinite;
+}
+
+.jumping-dots-loader span:nth-child(3) {
+  animation: bounce 1s ease-in-out 0.66s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  75%,
+  100% {
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  25% {
+    -webkit-transform: translateY(-10px);
+    -ms-transform: translateY(-10px);
+    -o-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
+
+.backdrop-filter {
+  -webkit-backdrop-filter: blur(5px); /* Add this line first, it fixes blur for Safari*/
+  backdrop-filter: blur(5px);
 }

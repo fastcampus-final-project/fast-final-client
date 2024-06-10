@@ -1,7 +1,7 @@
 import FlexBox from '@/components/ui/FlexBox';
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import Text from '@/components/ui/Text';
-import { SignupInputsValues } from './signupSchema';
+import { SignupInputsValues } from '../../schema/signupSchema';
 import { FormMessage } from '@/components/ui/form';
 
 type CheckedGenderProps = {
@@ -10,7 +10,7 @@ type CheckedGenderProps = {
 };
 
 const genderChoiceBtnClass =
-  'flex h-[4.8rem] w-full cursor-pointer items-center justify-center rounded-sm bg-gray-200 text-center text-gray-400 transition duration-200 hover:bg-gray-400';
+  'flex h-[4.8rem] w-full cursor-pointer items-center justify-center rounded-sm bg-gray-200 text-center text-gray-400 transition duration-200 xs:hover:bg-gray-400 xs:hover:text-white';
 
 const CheckedGender = ({ register, errors }: CheckedGenderProps) => {
   return (

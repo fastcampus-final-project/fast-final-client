@@ -1,20 +1,19 @@
 import NetWorthSection from './_components/NetWorthSection';
 import MyCreditSection from './_components/MyCreditSection';
 import CollectAssetSection from './_components/CollectAssetSection';
-import UpcomingScheduleSection from './_components/UpcomingScheduleSection';
-import MyAssetsGraphSection from './_components/MyAssetsGraphSection';
+
 const AssetManagementPage = () => {
   return (
     <>
-      <div className=''>
+      <section className='pt-20'>
         <NetWorthSection />
-      </div>
-      <div className='px-20 pb-[13.2rem]'>
+      </section>
+      <section className='px-20'>
         <MyCreditSection />
+      </section>
+      <section className='px-20'>
         <CollectAssetSection />
-        <UpcomingScheduleSection />
-        <MyAssetsGraphSection />
-      </div>
+      </section>
     </>
   );
 };
