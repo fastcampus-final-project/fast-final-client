@@ -1,22 +1,30 @@
 'use client';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, defaultValues, LoginInputsValues } from '../../schema/loginSchema';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { CardContent } from '@/components/ui/card';
-import EyeIcon from '../../_components/EyeIcon';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import FlexBox from '@/components/ui/FlexBox';
-import ClearInputValueIcon from '../../_components/ClearInputValueIcon';
 import Checkbox from '@/components/ui/CheckBox';
 import Text from '@/components/ui/Text';
 import TextButton from '@/components/ui/TextButton';
-import Link from 'next/link';
+import { signInWithCredentials } from '@/shared/actions/auth';
+
+const EyeIcon = dynamic(() => import('../../_components/EyeIcon'), { ssr: false });
+const ClearInputValueIcon = dynamic(() => import('../../_components/ClearInputValueIcon'), {
+  ssr: false
+});
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [autoLoginCheck, setAutoLoginCheck] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const [error, setError] = useState<string | undefined>('');
 
   const form = useForm<LoginInputsValues>({
     resolver: zodResolver(loginSchema),
@@ -31,14 +39,23 @@ const LoginForm = () => {
     control
   } = form;
 
-  const onSubmit = (data: LoginInputsValues) => {
-    console.log(data);
-  };
+  const onSubmit = handleSubmit(async (data) => {
+    setError('');
+    startTransition(async () => {
+      const result = await signInWithCredentials(data);
+
+      if (result?.error) {
+        setError(result.error);
+        return;
+      }
+      window.location.href = '/';
+    });
+  });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={onSubmit}
         className='flex h-[59.6rem] flex-col items-center justify-between bg-white px-20 pb-24'
       >
         <CardContent flexDirection='col' alignItems='center' className='w-full'>
@@ -118,9 +135,15 @@ const LoginForm = () => {
             </Checkbox>
           </FlexBox>
           <Footer />
-        </CardContent>
 
-        <Button type='submit' className='w-full self-end'>
+          {/* API에서 반환하는 에러메시지 */}
+          {error && (
+            <p className='mt-20 rounded-xs bg-warning/40 px-20 py-10 text-14 text-warning'>
+              {error}
+            </p>
+          )}
+        </CardContent>
+        <Button type='submit' className='w-full self-end' disabled={isPending}>
           로그인
         </Button>
       </form>
@@ -133,20 +156,20 @@ export default LoginForm;
 const Footer = () => {
   return (
     <FlexBox className='mt-[4.8rem] gap-x-22' alignItems='center'>
-      <TextButton type='button' className='text-gray-700' asChild>
+      <TextButton type='button' className='text-12 text-gray-500' asChild>
         <Link href='#' aria-label='포코계정 찾기로 가기'>
           포코계정 찾기
         </Link>
       </TextButton>
       <div className='h-6 w-[1px] bg-gray-300' aria-hidden></div>
-      <TextButton type='button' className='text-gray-700' asChild>
+      <TextButton type='button' className='text-12 text-gray-500' asChild>
         <Link href='#' aria-label='비밀번호 찾기로 가기'>
           비밀번호 찾기
         </Link>
       </TextButton>
       <div className='h-6 w-[1px] bg-gray-300' aria-hidden></div>
-      <TextButton type='button' className='text-gray-700' asChild>
-        <Link href='#' aria-label='회원가입으로 가기'>
+      <TextButton type='button' className='text-12 text-gray-500' asChild>
+        <Link href='/auth/signup' aria-label='회원가입으로 가기'>
           회원가입
         </Link>
       </TextButton>

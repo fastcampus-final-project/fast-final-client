@@ -1,32 +1,58 @@
+import dynamic from 'next/dynamic';
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import InputCard from '../InputCard';
 import Input from '@/components/ui/Input';
 import FlexBox, { flexBoxVariants } from '@/components/ui/FlexBox';
-import { useSearchParams } from 'next/navigation';
-import BottomSheet from '@/components/BottomSheet';
 import Icon from '@/components/Icon';
 import Text from '@/components/ui/Text';
-import { cn } from '@/utils/twMerge';
-import { QueryType } from '../BucketStepForm';
 import NextButton from '../NextButton';
-import { spendBookData, savingBookData } from '../../data';
+import RoundedSkeleton from '../RoundedSkeleton';
+import { useQueries, UseQueryResult } from '@tanstack/react-query';
+import { cn } from '@/shared/utils/twMerge';
+import { QueryType } from '../BucketStepForm';
+import { spendBookQueryFn, savingBookQueryFn } from '@/service/api/create-bucket';
+import { useCreateBucket } from '../../hooks/useCreateBucket';
+import type { StateType } from '../../types';
 
+const BottomSheet = dynamic(() => import('@/components/BottomSheet'), { ssr: false });
+type BankDataType = {
+  bank: string;
+  amount: number;
+  imgSrc: string;
+}[];
 type StepTwoProps = {
   handleChangeQueryString: (query: QueryType, term: string) => void;
 };
-export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
-  const searchParams = useSearchParams();
+
+const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
   const [openSpendSheet, setOpenSpendSheet] = useState(false);
   const [openSavingSheet, setOpenSavingSheet] = useState(false);
-  const [inputValues, setInputValues] = useState({
-    'spend-book': searchParams.get('spend-book') || '',
-    'saving-book': searchParams.get('saving-book') || ''
+  const { state, dispatch } = useCreateBucket();
+  const { 'spend-book': spendBook, 'saving-book': savingBook } = state;
+  const queryResults = useQueries({
+    queries: [
+      {
+        queryKey: ['spend-book'],
+        queryFn: spendBookQueryFn
+      },
+      {
+        queryKey: ['saving-book'],
+        queryFn: savingBookQueryFn
+      }
+    ]
   });
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
 
-  const handleChangeInputValues = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setInputValues((prev) => ({ ...prev, [name]: value }));
-  }, []);
+      dispatch({
+        type: 'SET_INPUT_VALUE',
+        payload: { name: name as keyof StateType, value }
+      });
+    },
+    [dispatch]
+  );
+  const [spendBookResult, savingBookResult] = queryResults as UseQueryResult<BankDataType, Error>[];
 
   const handleOpenSpendBookBtSheet = () => {
     setOpenSpendSheet(true);
@@ -36,14 +62,14 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
   };
 
   const handleSelectDoneSpendBook = () => {
-    if (!inputValues['spend-book']) return;
-    handleChangeQueryString('spend-book', inputValues['spend-book']);
+    if (!spendBook) return;
+    handleChangeQueryString('spend-book', spendBook);
     setOpenSpendSheet(false);
   };
 
   const handleSelectDoneSavingBoook = () => {
-    if (!inputValues['saving-book']) return;
-    handleChangeQueryString('saving-book', inputValues['saving-book']);
+    if (!savingBook) return;
+    handleChangeQueryString('saving-book', savingBook);
     setOpenSavingSheet(false);
   };
 
@@ -53,11 +79,11 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
         <Input
           readOnly
           className='peer/spend z-10 cursor-pointer caret-transparent'
-          placeholder='출금통장을 선택해주세요'
+          placeholder='주거래 계좌를 선택해주세요'
           id='spend-book'
           border='nonborder'
           onFocus={handleOpenSpendBookBtSheet}
-          value={inputValues['spend-book']}
+          value={spendBook}
           isTranslate
           inputMode='none'
         />
@@ -73,11 +99,11 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
           readOnly
           isTranslate
           className='z-10 cursor-pointer caret-transparent'
-          placeholder='저축통장을 선택해주세요'
+          placeholder='저축할 계좌를 선택해주세요'
           id='saving-book'
           border='nonborder'
           onFocus={handleOpenSavingBookBtSheet}
-          value={inputValues['saving-book']}
+          value={savingBook}
           inputMode='none'
         />
         <Icon
@@ -87,16 +113,16 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
           className='absolute right-[2rem]'
         />
       </InputCard>
-      <FlexBox alignItems='start' justifyContent='center' className='mt-32 h-[11.3rem] w-full'>
-        {inputValues['spend-book'] && inputValues['saving-book'] ? (
+      <FlexBox alignItems='start' justifyContent='center' className=' h-[11.3rem] w-full'>
+        {spendBook && savingBook ? (
           <FlexBox
             alignItems='center'
             justifyContent='center'
-            className='w-full rounded-2xl bg-white p-16'
+            className='mt-24 w-full rounded-2xl bg-white p-16'
           >
             <Text weight='500'>
-              <span className='text-primary'>{inputValues['spend-book']}</span>에서{' '}
-              <span className='text-primary'>{inputValues['saving-book']}</span>으로 저축할거에요
+              <span className='text-primary'>{spendBook}</span>에서{' '}
+              <span className='text-primary'>{savingBook}</span>으로 저축할거에요
             </Text>
           </FlexBox>
         ) : null}
@@ -108,22 +134,24 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
         buttonLabel='선택'
         isOpen={openSpendSheet}
         onClose={() => setOpenSpendSheet(false)}
-        buttonOptions={{ size: 'md', disabled: inputValues['spend-book'] ? false : true }}
+        buttonOptions={{ size: 'md', disabled: spendBook ? false : true }}
         buttonType='button'
         onClick={() => handleSelectDoneSpendBook()}
       >
         <div className='mt-0 space-y-[0.8rem]'>
-          {spendBookData.map((item) => {
-            return (
-              <BottomSheetCard
-                key={item.bank}
-                item={item}
-                onChange={handleChangeInputValues}
-                value={inputValues['spend-book']}
-                name='spend-book'
-              />
-            );
-          })}
+          {spendBookResult.isLoading
+            ? [...Array(6)].map((_, index) => <RoundedSkeleton key={index} />)
+            : spendBookResult.data?.map((item) => {
+                return (
+                  <BottomSheetCard
+                    key={item.bank}
+                    item={item}
+                    onChange={handleInputChange}
+                    value={spendBook}
+                    name='spend-book'
+                  />
+                );
+              })}
         </div>
       </BottomSheet>
 
@@ -133,26 +161,28 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
         buttonLabel='선택'
         isOpen={openSavingSheet}
         onClose={() => setOpenSavingSheet(false)}
-        buttonOptions={{ size: 'md', disabled: inputValues['saving-book'] ? false : true }}
+        buttonOptions={{ size: 'md', disabled: savingBook ? false : true }}
         buttonType='button'
         onClick={() => handleSelectDoneSavingBoook()}
       >
         <div className='mt-0 space-y-[0.8rem]'>
-          {savingBookData.map((item) => {
-            return (
-              <BottomSheetCard
-                key={item.bank}
-                item={item}
-                value={inputValues['saving-book']}
-                onChange={handleChangeInputValues}
-                name='saving-book'
-              />
-            );
-          })}
+          {savingBookResult.isFetching
+            ? [...Array(6)].map((_, index) => <RoundedSkeleton key={index} />)
+            : savingBookResult.data?.map((item) => {
+                return (
+                  <BottomSheetCard
+                    key={item.bank}
+                    item={item}
+                    value={savingBook}
+                    onChange={handleInputChange}
+                    name='saving-book'
+                  />
+                );
+              })}
         </div>
       </BottomSheet>
       <NextButton
-        disabled={!(inputValues['saving-book'] && inputValues['spend-book'])}
+        disabled={!(savingBook && spendBook)}
         buttonLabel='다음'
         currentStep='2'
         type='button'
@@ -161,6 +191,7 @@ export const StepTwo = ({ handleChangeQueryString }: StepTwoProps) => {
     </>
   );
 };
+export default StepTwo;
 
 // 바텀시트 내용
 

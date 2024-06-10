@@ -1,12 +1,12 @@
 'use client';
-import React, { useEffect, useState, useRef, MouseEvent } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Text from '@/components/ui/Text';
 import { motion } from 'framer-motion';
-import { useWindowResize } from '@/hooks/useWindowResize';
+import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import Image from 'next/image';
 import FlexBox from '@/components/ui/FlexBox';
-import { useTotalWidth } from '@/hooks/useTotalWidth';
+import { useTotalWidth } from '@/shared/hooks/useTotalWidth';
 import Icon from '@/components/Icon';
 const ItemList = [
   {
@@ -40,9 +40,6 @@ const NetWorthSection = () => {
     }
   }, [windowWidth]);
 
-  const handleItemClick = (e: MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-  };
   const onDragStart = () => {
     setDragging(true);
   };

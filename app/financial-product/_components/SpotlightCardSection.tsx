@@ -7,7 +7,7 @@ import SpotlightCardItem from './SpotlightCard';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/Icon';
 import { getSpotlightCards } from '@/service/api/financial-product/cards';
-import { useQueryString } from '@/hooks/useQueryString';
+import { useQueryString } from '@/shared/hooks/useQueryString';
 import { useQuery } from '@tanstack/react-query';
 import Spinner from '@/components/Spinner';
 
@@ -15,7 +15,7 @@ const SpotlightCardSection = () => {
   const { queryValue } = useQueryString();
   const type = queryValue('tab');
 
-  const { data: spotlightCards, isPending } = useQuery({
+  const { data: spotlightCards, isLoading } = useQuery({
     queryKey: ['spotlightCard', type],
     queryFn: () => getSpotlightCards(type)
   });
@@ -38,7 +38,7 @@ const SpotlightCardSection = () => {
       <div className='mb-24 mt-16'>
         <Tab array={['신용카드', '체크카드']} type='box' tabKey='tab' />
       </div>
-      {isPending ? (
+      {isLoading ? (
         <FlexBox justifyContent='center'>
           <Spinner />
         </FlexBox>

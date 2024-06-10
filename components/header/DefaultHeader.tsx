@@ -6,6 +6,9 @@ import Image from 'next/image';
 import Icon from '../Icon';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { HTMLAttributes } from 'react';
+import { cn } from '@/shared/utils/twMerge';
+import { useUserSession } from '@/shared/hooks/useUserSession';
+import Link from 'next/link';
 
 type DefaultHeaderProps = {
   isHome?: boolean;
@@ -21,17 +24,24 @@ export const DefaultHeader = ({
   isFixed = true
 }: DefaultHeaderProps) => {
   const { scrollY } = useScroll();
+  const userData = useUserSession();
 
-  const headerColor = useTransform(scrollY, [0, 1], [`${defaultColor || 'transparent'}`, '#fff']);
-
+  const headerColor = useTransform(
+    scrollY,
+    [0, 1],
+    [`${defaultColor || 'transparent'}`, '#ffffffd0']
+  );
+  const fixedClass = isFixed ? 'sticky top-0 z-20' : '';
   return (
     <motion.header
       style={{ backgroundColor: headerColor }}
-      className={flexBoxVariants({
-        justifyContent: 'between',
-        alignItems: 'center',
-        className: `${isFixed && 'sticky top-0 z-20'} h-[5.6rem] px-20`
-      })}
+      className={cn(
+        flexBoxVariants({
+          justifyContent: 'between',
+          alignItems: 'center'
+        }),
+        `${fixedClass} h-[5.6rem] px-20 backdrop-filter`
+      )}
     >
       {isHome ? (
         <div
@@ -46,15 +56,18 @@ export const DefaultHeader = ({
         </Text>
       )}
       <FlexBox className='gap-x-12'>
+        <Link href='/notification' aria-label='알림 페이지로 이동'>
+          <Icon
+            src='/icons/system-icon/header/header-alarm-on.svg'
+            alt='알람 아이콘'
+            size='24'
+            className='cursor-pointer'
+            aria-hidden
+          />
+        </Link>
         <Icon
-          src='/icons/system-icon/header/header-alarm.svg'
-          alt='알람 아이콘'
-          size='24'
-          className='cursor-pointer'
-        />
-        <Icon
-          src='/icons/profile/profile.svg'
-          alt='프로필 아이콘'
+          src={userData?.image ?? '/icons/profile/profile.svg'}
+          alt='프로필 이미지'
           size='24'
           className='cursor-pointer'
         />

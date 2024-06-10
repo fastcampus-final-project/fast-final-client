@@ -1,3 +1,5 @@
+'use client';
+
 import BottomSheet from '@/components/BottomSheet';
 import Icon from '@/components/Icon';
 import Tab from '@/components/ui/Tab';
@@ -7,7 +9,7 @@ import SelectCardCompany, { cardCompanies } from './SelectCardCompany';
 import SelectFiltering from './SelectFiltering';
 import FlexBox from '@/components/ui/FlexBox';
 import FilteringPlace from './FilteringPlace';
-import { useQueryString } from '@/hooks/useQueryString';
+import { useQueryString } from '@/shared/hooks/useQueryString';
 
 export type CardCompany = { title: string; iconPath: string };
 

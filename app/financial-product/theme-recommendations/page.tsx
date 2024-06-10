@@ -2,13 +2,19 @@ import Text from '@/components/ui/Text';
 import Link from 'next/link';
 import { IsBackHeader } from '@/components/header';
 import Icon from '@/components/Icon';
-import { THEMES } from '@/utils/financial-product/staticData';
+import { THEMES } from '@/shared/utils/financial-product/staticData';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'PORKO | 테마별 추천',
+  description: 'PORKO 테마별 추천 페이지'
+};
 
 const ThemeRecommendationsPage = () => {
   return (
     <>
       <IsBackHeader href='./?tab=신용카드' defaultColor='#fff' />
-      <main className='bg-white px-20 pb-[6rem]'>
+      <main className='bg-white px-20 pb-[6rem] pt-[1rem]'>
         <Text variant='h1' sizes='24' weight='600' className='mb-40'>
           상황에 맞는 상품을 <br /> 선택해 보세요!
         </Text>

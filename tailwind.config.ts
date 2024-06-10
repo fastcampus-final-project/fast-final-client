@@ -8,6 +8,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: [
+          'apple color emoji',
+          'segoe ui emoji',
+          'noto color emoji',
+          'android emoji',
+          'emojisymbols',
+          'emojione mozilla',
+          'twemoji mozilla'
+        ]
+      },
       backgroundSize: {
         auto: 'auto',
         cover: 'cover',
@@ -55,6 +66,7 @@ const config: Config = {
         '48': ['4.8rem', { lineHeight: '7.2rem' }]
       },
       padding: {
+        '2': '0.2rem',
         '4': '0.4rem',
         '6': '0.6rem',
         '8': '0.8rem',
@@ -66,9 +78,11 @@ const config: Config = {
         '28': '2.8rem',
         '32': '3.2rem',
         '36': '3.6rem',
-        '40': '4rem'
+        '40': '4rem',
+        '48': '4.8rem'
       },
       margin: {
+        '2': '0.2rem',
         '4': '0.4rem',
         '6': '0.6rem',
         '8': '0.8rem',
@@ -80,9 +94,11 @@ const config: Config = {
         '28': '2.8rem',
         '32': '3.2rem',
         '36': '3.6rem',
-        '40': '4rem'
+        '40': '4rem',
+        '48': '4.8rem'
       },
       borderRadius: {
+        xxs: '0.4rem',
         xs: '0.8rem',
         sm: '1.2rem',
         md: '1.6rem',
@@ -128,6 +144,12 @@ const config: Config = {
           '100%': {
             scale: '105%',
             'box-shadow': '0px 0px 16px 9px rgba(0, 0, 0, 0.06)'
+          }
+        },
+        ping: {
+          '75%, 100%': {
+            transform: 'scale(1.1)',
+            opacity: '0.5'
           }
         }
       }
