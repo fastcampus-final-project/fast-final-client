@@ -9,7 +9,6 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        suit: ['Suit', 'sans-serif'],
         sans: [
           'apple color emoji',
           'segoe ui emoji',
